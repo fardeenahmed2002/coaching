@@ -1,0 +1,46 @@
+@import "tailwindcss";
+@plugin "daisyui";
+
+@theme {
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
+
+  /* Custom Color System */
+  --color-primary: #00D4FF;
+  --color-secondary: #8E9AAF;
+  --color-dark-bg: #1A1C1E;
+}
+
+@layer base {
+  body {
+    @apply antialiased transition-colors duration-300;
+  }
+}
+
+/* DaisyUI Customization */
+[data-theme='dark'] {
+  --color-base-100: #1A1C1E;
+  --color-base-content: #F5F5F4;
+}
+
+[data-theme='light'] {
+  --color-base-100: #FFFFFF;
+  --color-base-content: #1A1C1E;
+}
+
+.glass-nav {
+  @apply sticky top-0 z-50 backdrop-blur-md border-b border-white/10;
+}
+
+.card-hover {
+  @apply transition-all duration-300 hover:shadow-xl hover:-translate-y-2;
+}
+
+.primary-btn {
+  @apply bg-primary text-dark-bg font-bold px-6 py-2 rounded-full hover:opacity-90 transition-all;
+}
+
+.secondary-btn {
+  @apply bg-secondary text-white font-bold px-6 py-2 rounded-full hover:opacity-90 transition-all;
+}
+

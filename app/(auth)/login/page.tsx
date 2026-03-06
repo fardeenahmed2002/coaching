@@ -1,9 +1,14 @@
 "use client";
 
+import { Context } from "@/context/AuthContext";
+import axios from "axios";
 import { motion } from "framer-motion";
 import { ArrowLeft, Lock, LogIn, Mail } from "lucide-react";
 import Link from "next/link";
-import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { useContext, useState } from "react";
+import Loader from "../components/designs/Loader";
+
 
 type FormData = {
   email: string,
@@ -16,7 +21,9 @@ const LoginPage = () => {
     email: '',
     password: ''
   })
-
+  const [loading, setLoading] = useState(false)
+  const { setUser, setIsloggedin } = useContext(Context)
+  const router = useRouter()
   const handlechange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target
     setFormdata({ ...formdata, [name]: value })
@@ -25,10 +32,29 @@ const LoginPage = () => {
   const handlesubmit = async (e: React.FormEvent) => {
     try {
       e.preventDefault()
-      console.log(formdata)
-      alert(`check console`)
-    } catch (error) {
+      setLoading(true)
+      axios.defaults.withCredentials = true
+      const { data } = await axios.post("api/auth/login", {
+        email: formdata.email,
+        password: formdata.password
+      })
+      if (data.success) {
+        // Context update
+        setUser(data.user)
+        setIsloggedin(true)
+        setLoading(false)
+        // Role-based redirect
+        if (data.user.role === "student") router.push("/student")
+        else if (data.user.role === "admin") router.push("/admin")
+      } else {
+        alert(data.message)
+      }
 
+    } catch (error: any) {
+      console.error(error);
+      alert(error?.response?.data?.message || "Something went wrong");
+    } finally {
+      setLoading(false);
     }
   }
   return (
@@ -86,10 +112,13 @@ const LoginPage = () => {
             <Link href="#" className="text-primary hover:underline">Forgot Password?</Link>
           </div>
 
-          <button className="primary-btn py-4 text-lg mt-4 flex items-center justify-center gap-2" type="submit">
+
+          {loading ? (<button className="primary-btn py-4 text-lg mt-4 flex items-center justify-center gap-2" type="submit">
+            <Loader />
+          </button>) : (<button className="primary-btn py-4 text-lg mt-4 flex items-center justify-center gap-2" type="submit">
             <LogIn className="w-5 h-5" />
             Login
-          </button>
+          </button>)}
 
           <div className="text-center text-sm mt-4">
             Don&apos;t have an account? <Link href="/signup" className="text-primary font-bold hover:underline">Sign Up</Link>

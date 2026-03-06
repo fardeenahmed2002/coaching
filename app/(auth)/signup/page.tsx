@@ -63,7 +63,7 @@ const SignupPage = () => {
       const { data } = await axios.post("/api/auth/signup", form, { withCredentials: true });
 
       if (data.success) {
-        // Context আপডেট
+        // Context update
         setUser(data.user);
         setIsloggedin(true);
 

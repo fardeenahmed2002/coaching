@@ -15,7 +15,7 @@ const Page = () => {
 
     return (
         <div className="min-h-screen flex items-center justify-center">
-            {user.name} madafaka welcum!! 💦💦💦💦
+            {user?.name} hello
         </div>
     )
 }

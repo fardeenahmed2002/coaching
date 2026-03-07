@@ -55,10 +55,10 @@ const Navbar = () => {
 
         {/* Desktop Menu */}
         {user?.role === "student" && isloggedin && (<div>
-          <Link href={"student/exam"}> give exam </Link>
+          <Link href={"/student/exam"}> give exam </Link>
         </div>)}
         {user?.role === "admin" && isloggedin && (<div>
-          <Link href={"admin/qusmake"}> make qus </Link>
+          <Link href={"/admin/qusmake"}> make qus </Link>
         </div>)}
 
         {user?.role !== "student" && user?.role !== "admin" && (

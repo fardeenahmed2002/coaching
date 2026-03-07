@@ -1,8 +1,8 @@
 "use client"
-
+import { Context } from "@/context/AuthContext"
 import axios from "axios"
-import Link from "next/link"
-import { useEffect, useState } from "react"
+import { useRouter } from "next/navigation"
+import { useContext, useEffect, useState } from "react"
 type Question = {
   _id: number
   question: string
@@ -12,6 +12,8 @@ export default function ExamPage() {
 
   const [answers, setAnswers] = useState<any>({})
   const [questions, setQuestions] = useState<Question[]>([])
+  const { user } = useContext(Context)
+  const router = useRouter()
   const handlechange = (id: any, opt: any) => {
     setAnswers({
       ...answers,
@@ -34,16 +36,32 @@ export default function ExamPage() {
     getallquestions()
   }, [])
 
-  const handleSubmit = (e: any) => {
+  const handleSubmit = async (e: any) => {
     e.preventDefault()
-    console.log(answers)
+    try {
+      console.log(answers)
+      const { data } = await axios.post("/api/student", {
+        answers,
+        id: user?._id,
+        subject: "chemistry",
+        studentClass: 10
+      })
+      if (data.success) {
+        alert('done exam')
+        router.push('/student/result')
+      }
+    } catch (error: any) {
+      console.error(error);
+      alert(error?.response?.data?.message || "Something went wrong");
+    }
+
   }
 
   return (
     <div className="max-w-2xl mx-auto mt-10">
 
       <h1 className="text-2xl font-bold mb-6">
-        MCQ Exam
+        MCQ Exam for {user?._id}
       </h1>
 
       <form onSubmit={handleSubmit} className="space-y-6">
@@ -73,8 +91,7 @@ export default function ExamPage() {
         ))}
 
         <button className="bg-blue-500 text-white px-5 py-2 rounded">
-          <Link href={'/student/result'}>Submit </Link>
-          
+          Submit
         </button>
 
       </form>

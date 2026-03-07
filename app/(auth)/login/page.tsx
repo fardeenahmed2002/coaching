@@ -47,7 +47,7 @@ const LoginPage = () => {
         if (data.user.role === "student") router.push("/student")
         else if (data.user.role === "admin") router.push("/admin")
       } else {
-        alert(data.message)
+        alert(data.mssage)
       }
 
     } catch (error: any) {

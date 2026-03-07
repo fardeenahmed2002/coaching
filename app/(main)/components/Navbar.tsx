@@ -15,7 +15,7 @@ const Navbar = () => {
   const { language, setLanguage, t } = useLanguage();
   const { theme, toggleTheme } = useTheme();
   const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
-  const { isloggedin, setIsloggedin, setUser } = useContext(Context)
+  const { isloggedin, setIsloggedin, setUser, user } = useContext(Context)
   const [loading, setIsloading] = useState<boolean>(false)
 
   const navigate = useRouter()
@@ -54,17 +54,26 @@ const Navbar = () => {
         </Link>
 
         {/* Desktop Menu */}
-        <div className="hidden lg:flex items-center gap-8">
-          {navItems.map((item) => (
-            <Link
-              key={item.name}
-              href={item.path}
-              className="text-sm font-medium hover:text-primary transition-colors"
-            >
-              {item.name}
-            </Link>
-          ))}
-        </div>
+        {user?.role === "student" && isloggedin && (<div>
+          <Link href={"student/exam"}> give exam </Link>
+        </div>)}
+        {user?.role === "admin" && isloggedin && (<div>
+          <Link href={"admin/qusmake"}> make qus </Link>
+        </div>)}
+
+        {user?.role !== "student" && user?.role !== "admin" && (
+          <div className="hidden lg:flex items-center gap-8">
+            {navItems.map((item) => (
+              <Link
+                key={item.name}
+                href={item.path}
+                className="text-sm font-medium hover:text-primary transition-colors"
+              >
+                {item.name}
+              </Link>
+            ))}
+          </div>
+        )}
 
         {/* Actions */}
         <div className="hidden lg:flex items-center gap-4">
@@ -111,7 +120,7 @@ const Navbar = () => {
           }
         </div>
 
-                                                  {/* Mobile Menu Toggle */}
+        {/* Mobile Menu Toggle */}
         <button
           className="lg:hidden btn btn-ghost btn-circle"
           onClick={() => setIsMenuOpen(!isMenuOpen)}
